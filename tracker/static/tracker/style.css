@@ -1,0 +1,96 @@
+:root {
+    --main-color: #4167b1;
+    --background-color: #e5eaef;
+    --border-color: #ddd8d0;
+    --text-color: #2e2e2e;
+    --title-color: #3f3f3f;
+    --sub-color: #add1f3;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 标题样式 */
+.page-title {
+    font-size: 26px;
+    font-weight: 600; /* fo加粗程度设置为 600，比普通的 bold=700 略轻 */
+    color: var(--text-color);
+}
+
+/* 导航栏样式 */
+/* 替换 Bootstrap 的默认深色背景 */
+/* .custom-navbar {
+    background-color: var(--main-color);
+} */
+.navbar {
+    background-color: var(--main-color);
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+}
+
+/* 导航栏当前页面高亮 */
+.navbar .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.navbar .nav-link {
+    font-size: 16px;
+    color: white;
+}
+
+.navbar .nav-link.disabled {
+    color: #ccc !important; 
+}
+
+/* 表格样式 */
+table {
+    width: 90%;
+    border-collapse: collapse;
+    background-color: white;
+    border: 1px solid var(--border-color);
+    margin: 20px auto;
+}
+
+table th,
+table td {
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    text-align: left;
+    text-align: center;
+    vertical-align: middle;
+}
+
+table th {
+    background-color: var(--main-color);
+    color: white;
+}
+
+/* 提示消息样式 */
+.alert {
+    margin-top: 10px;
+}
+
+#add-job-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#popup-form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 2px solid #ccc;
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}

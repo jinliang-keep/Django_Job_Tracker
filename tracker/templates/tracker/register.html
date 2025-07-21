@@ -1,0 +1,81 @@
+{% extends 'tracker/base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}注册账号{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card shadow rounded">
+                    <div class="card-body">
+
+                        <h3 class="text-center mb-2">注册你的账号</h3>
+                    
+                        <!-- form表单 -->
+                        <form method="POST" class="border p-4 rounded shadow-sm bg-light">
+                            <!-- 防止跨站请求伪造攻击（CSRF） -->
+                            {% csrf_token %}
+
+                            <!-- 用户名 -->
+                            <div class="mb-2">
+                                <label for="id_username" class="form-label">用户名</label>
+                                {{ form.username|add_class:"form-control"|attr:"placeholder:请输入用户名"|attr:"autofocus" }}
+                                {% for error in form.username.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- 邮箱 -->
+                            <div class="mb-2">
+                                <label for="id_email" class="form-label">邮箱地址</label>
+                                {{ form.email|add_class:"form-control"|attr:"placeholder:例如 you@example.com" }}
+                                {% for error in form.email.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+    
+                            <!-- 密码 -->
+                            <div class="mb-2">
+                                <label for="id_password" class="form-label">密码</label>
+                                {{ form.password|add_class:"form-control"|attr:"placeholder:至少8位字母数字组合" }}
+                                {% for error in form.password.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+    
+                            <!-- 确认密码 -->
+                            <div class="mb-2">
+                                <label for="id_password2" class="form-label">确认密码</label>
+                                {{ form.password2|add_class:"form-control"|attr:"placeholder:请再次输入密码" }}
+                                {% for error in form.password2.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+    
+                            <!-- 非字段错误 -->
+                            <!-- {% if form.non_field_errors %}
+                                {% for error in form.non_field_errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                                </div>
+                            {% endif %} -->
+    
+                            <!-- 提交按钮 -->
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn btn-primary rounded-pill">
+                                    注册账号
+                                </button>
+                            </div>
+    
+                            <!-- 已有账号提示 -->
+                            <p class="text-center mt-3 small">
+                                已有账号？<a href="{% url 'login' %}" class="text-decoration-none">点击登录</a>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

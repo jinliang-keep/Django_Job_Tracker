@@ -1,0 +1,48 @@
+{% extends 'tracker/base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}登录{% endblock %}
+
+{% block content %}
+    <div class="container mt-3">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card shadow rounded">
+                    <div class="card-body">
+
+                        <h3 class="text-center mb-2">登录你的账号</h3>
+                    
+                        <!-- form表单 -->
+                        <form method="POST" class="border p-4 rounded shadow-sm bg-light">
+                            <!-- 防止跨站请求伪造攻击（CSRF） -->
+                            {% csrf_token %}
+
+                            <!-- 用户名 -->
+                            <div class="mb-2">
+                                <label for="id_username" class="form-label">用户名</label>
+                                {{ form.username|add_class:"form-control"|attr:"placeholder:请输入用户名"|attr:"autofocus" }}
+                                {% for error in form.username.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+    
+                            <!-- 密码 -->
+                            <div class="mb-2">
+                                <label for="id_password" class="form-label">密码</label>
+                                {{ form.password|add_class:"form-control"|attr:"placeholder:请输入密码" }}
+                            </div>
+    
+                            <!-- 提交按钮 -->
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn btn-primary rounded-pill">
+                                    登录
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

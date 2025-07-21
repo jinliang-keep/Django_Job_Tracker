@@ -1,0 +1,154 @@
+{% extends 'tracker/base.html' %}
+
+{% block title %}职位列表{% endblock %}
+{% load static %}
+{% load widget_tweaks %}
+{% load form_tags %}
+{% block content %}
+
+<h3 class="text-center mt-3">我的职位列表</h3>
+
+<!-- 添加职位按钮 -->
+<!-- data-bs-toggle: 点击时触发modal -->
+<!-- data-bs-target: 要弹出的modal的ID -->
+<button class="btn btn-primary" id="add-job-btn" data-bs-toggle="modal" data-bs-target="#addJobModal">＋添加职位</button>
+
+<!-- 模态框：弹出窗口 -->
+<div class="modal fade" id="addJobModal" tabindex="-1" aria-labelledby="addJobModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- 模态框头部 -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">添加职位</h5>
+                <!-- 关闭按钮 -->
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- 模态框主体 -->
+            <div class="modal-body">
+                <form action="" method="POST">
+                    {% csrf_token %}
+
+                    <div class="mb-2">
+                        <label for="{{ form.company.id_for_label }}"><span class="text-danger">*</span>公司名称：</label>
+                        {{ form.company }}
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="{{ form.title.id_for_label }}"><span class="text-danger">*</span>职位名称：</label>
+                        {{ form.title }}
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="{{ form.salary.id_for_label }}">薪资：</label>
+                        {{ form.salary }}
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="{{ form.location.id_for_label }}">工作地点：</label>
+                        {{ form.location }}
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="{{ form.status.id_for_label }}"><span class="text-danger">*</span>投递状态：</label>
+                        {{ form.status }}
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="{{ form.note.id_for_label }}">备注：</label>
+                        {{ form.note }}
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="{{ form.date_applied.id_for_label }}">投递日期：</label>
+                        {{ form.date_applied }}
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="{{ form.link.id_for_label }}">职位链接：</label>
+                        {{ form.link }}
+                    </div>
+                    
+                    <!-- 隐藏字段 -->
+                    <input type="hidden" name="job_id" id="job_id" value="">
+
+                    <!-- 保存按钮 -->
+                    <div class="d-grid mt-3">
+                        <button type="submit" class="btn btn-primary rounded-pill">
+                            保存
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 表格展示职位信息 -->
+<div class="table-responsive">
+    <table border="0" cellpadding="0" cellspacing="0">
+        <!-- 表头 -->
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>公司名称</th>
+                <th>职位名称</th>
+                <th>薪资</th>
+                <th>工作地点</th>
+                <th>投递状态</th>
+                <!-- <th>备注</th> -->
+                <th>投递日期</th>
+                <th>职位链接</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+
+        <!-- 表身 -->
+        <tbody>
+            {% if jobs %}
+                {% for job in jobs %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td> <!-- 序号 -->
+                        <td>{{ job.company }}</td>
+                        <td>{{ job.title }}</td>
+                        <td>{{ job.salary }}</td>
+                        <td>{{ job.location }}</td>
+                        <!-- 投递状态 -->
+                        <td>
+                            {% with job.status_badge as badge %}
+                                <span class="badge bg-{{ badge.1 }}">{{ badge.0 }}</span>
+                            {% endwith %}
+                        </td>
+                        <!-- <td>{{ job.note }}</td> -->
+                        <td>{{ job.date_applied }}</td>
+                        <td>
+                            {% if job.link %}
+                                <a href="{{ job.link }}" target="_blank">查看</a>
+                            {% else %}
+                                <span class="text-muted">无链接</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <!-- 编辑按钮：传入职位ID -->
+                            <a href="#"
+                                class="btn btn-sm btn-warning edit-job-btn"
+                                data-id="{{ job.id }}"
+                            >编辑</a>
+
+                            <!-- 删除按钮：跳转删除URL -->
+                            {% if job.id %}
+                                <a href="{% url 'delete_job' job.id %}" class="btn btn-sm btn-danger" onclick="return confirm('你确定要删除这条职位记录吗？')">删除</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="9">还没有职位记录，赶快添加一个吧！</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

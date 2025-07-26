@@ -12,6 +12,9 @@ from django.contrib.auth.decorators import login_required
 # from django.contrib.auth.hashers import make_password
 from datetime import datetime
 
+# 关键词搜索功能
+from django.db.models import Q
+
 # Create your views here.
 # 1、首页
 def home(request):
@@ -84,8 +87,47 @@ def register(request):
 @login_required
 def job_list(request):
 
-    jobs = Job.objects.filter(user=request.user).order_by('-date_applied')
+    # 获取关键词
+    query = request.GET.get('q')
+    no_result = False
 
+    # 如果用户使用搜索功能
+    if query:
+        keywords = query.strip().split() # 拆分关键词
+        
+        base_filter = Q(user=request.user) # 只查当前登录用户的职位
+        keyword_filter = Q()
+
+        # 遍历关键字
+        for word in keywords:
+            keyword_filter |= (
+                Q(company__icontains=word) | 
+                Q(title__icontains=word) | 
+                Q(salary__icontains=word) | 
+                Q(location__icontains=word)
+            )
+        
+        final_filter = base_filter & keyword_filter
+        jobs = Job.objects.filter(final_filter).order_by('-date_applied')
+
+        # jobs = Job.objects.filter(
+        #     Q(user=request.user) & (
+        #         Q(company__icontains=query) | 
+        #         Q(title__icontains=query) | 
+        #         Q(salary__icontains=query) | 
+        #         Q(location__icontains=query)
+        #     )        
+        # ).order_by('-date_applied')
+
+        # 如果搜索无结果
+        if not jobs.exists():
+            no_result = True  
+
+    # 展示职位列表
+    else:
+        jobs = Job.objects.filter(user=request.user).order_by('-date_applied')
+
+    # 用户提交表单，添加、编辑职位
     if request.method == 'POST':
         job_id = request.POST.get('job_id')
 
@@ -116,6 +158,7 @@ def job_list(request):
     return render(request, 'tracker/job_list.html', {
         'jobs': jobs,
         'form': form,
+        'no_result': no_result,
         'timestamp': datetime.now().timestamp(), })
 
 # 6、删除职位

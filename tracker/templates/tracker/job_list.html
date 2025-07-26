@@ -8,10 +8,20 @@
 
 <h3 class="text-center mt-3">我的职位列表</h3>
 
-<!-- 添加职位按钮 -->
-<!-- data-bs-toggle: 点击时触发modal -->
-<!-- data-bs-target: 要弹出的modal的ID -->
-<button class="btn btn-primary" id="add-job-btn" data-bs-toggle="modal" data-bs-target="#addJobModal">＋添加职位</button>
+<div class="d-flex justify-content-between align-items-center mb-1">
+    <!-- 左边：添加职位按钮 -->
+    <!-- data-bs-toggle: 点击时触发modal -->
+    <!-- data-bs-target: 要弹出的modal的ID -->
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addJobModal">＋添加职位</button>
+
+    <!-- 右边：搜索表单 -->
+    <form method="get" action="{% url 'job_list' %}" class="d-flex" style="max-width: 300px; width:100%;">
+        <input type="text" name="q" class="form-control me-2 shadow-sm" placeholder="请输入关键词搜索" value="{{ request.GET.q }}">
+        <button type="submit" class="btn btn-primary flex-shrink-0">
+            <i class="bi bi-search"></i>
+        </button>
+    </form>
+</div>
 
 <!-- 模态框：弹出窗口 -->
 <div class="modal fade" id="addJobModal" tabindex="-1" aria-labelledby="addJobModalLabel" aria-hidden="true">
@@ -145,8 +155,15 @@
                 {% endfor %}
             {% else %}
                 <tr>
-                    <td colspan="9">还没有职位记录，赶快添加一个吧！</td>
+                    {% if no_result %}
+                        <td colspan="9">没有找到相关职位。</td>
+                    {% else %}
+                        <td colspan="9">还没有职位记录，赶快添加一个吧！</td>
+                    {% endif %}
                 </tr>
+                <!-- <tr>
+                    <td colspan="9">还没有职位记录，赶快添加一个吧！</td>
+                </tr> -->
             {% endif %}
         </tbody>
     </table>

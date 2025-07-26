@@ -46,7 +46,7 @@ body {
 }
 
 .navbar .nav-link.disabled {
-    color: #ccc !important; 
+    color: white !important; 
 }
 
 /* 表格样式 */
@@ -77,15 +77,6 @@ table th {
     margin-top: 10px;
 }
 
-#add-job-btn {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
 #popup-form {
     max-width: 500px;
     margin: 0 auto;
@@ -94,3 +85,7 @@ table th {
     background-color: #fff;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+
+/* .card-border {
+    border: 1.5px solid var(--sub-color);
+} */

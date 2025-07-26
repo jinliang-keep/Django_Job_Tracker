@@ -6,13 +6,30 @@
 {% load form_tags %}
 {% block content %}
 
-<h3 class="text-center mt-3">我的职位列表</h3>
+<h3 class="text-center fw-bold border-bottom my-4 pb-2" style="letter-spacing:1px;">
+    我的职位列表
+</h3>
 
-<div class="d-flex justify-content-between align-items-center mb-1">
+<div class="d-flex justify-content-between align-items-center flex-wrap mb-1 gap-2">
     <!-- 左边：添加职位按钮 -->
     <!-- data-bs-toggle: 点击时触发modal -->
     <!-- data-bs-target: 要弹出的modal的ID -->
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addJobModal">＋添加职位</button>
+
+
+    <!-- 中间：筛选投递状态 -->
+    <form method="get" action="" class="d-flex align-items-center" style="max-width: 300px; width:100%;">
+        <label for="statusSelect" class="flex-shrink-0 me-2 mb-0"">投递状态：</label>
+        <select id="statusSelect" name="status" onchange="this.form.submit()" class="form-select shadow-sm me-2">
+            <option value="">全部状态</option>
+            <option value="未投递" {% if request.GET.status == "未投递" %}selected{% endif %}>未投递</option>
+            <option value="已投递" {% if request.GET.status == "已投递" %}selected{% endif %}>已投递</option>
+            <option value="已面试" {% if request.GET.status == "已面试" %}selected{% endif %}>已面试</option>
+            <option value="已拿offer" {% if request.GET.status == "已拿offer" %}selected{% endif %}>已拿offer</option>
+            <option value="已拒绝" {% if request.GET.status == "已拒绝" %}selected{% endif %}>已拒绝</option>
+            <option value="未通过" {% if request.GET.status == "未通过" %}selected{% endif %}>未通过</option>
+        </select>
+    </form>
 
     <!-- 右边：搜索表单 -->
     <form method="get" action="{% url 'job_list' %}" class="d-flex" style="max-width: 300px; width:100%;">
@@ -96,21 +113,21 @@
 </div>
 
 <!-- 表格展示职位信息 -->
-<div class="table-responsive">
-    <table border="0" cellpadding="0" cellspacing="0">
+<div class="table-responsive mt-3">
+    <table>
         <!-- 表头 -->
         <thead>
             <tr>
-                <th>序号</th>
-                <th>公司名称</th>
-                <th>职位名称</th>
-                <th>薪资</th>
-                <th>工作地点</th>
-                <th>投递状态</th>
+                <th style="width: 5%">序号</th>
+                <th style="width: 22%">公司名称</th>
+                <th style="width: 22%">职位名称</th>
+                <th style="width: 8%">薪资</th>
+                <th style="width: 8%">工作地点</th>
+                <th style="width: 9%">投递状态</th>
                 <!-- <th>备注</th> -->
-                <th>投递日期</th>
-                <th>职位链接</th>
-                <th>操作</th>
+                <th style="width: 13%">投递日期</th>
+                <!-- <th>职位链接</th> -->
+                <th style="width: 13%">操作</th>
             </tr>
         </thead>
 
@@ -132,17 +149,17 @@
                         </td>
                         <!-- <td>{{ job.note }}</td> -->
                         <td>{{ job.date_applied }}</td>
-                        <td>
+                        <!-- <td>
                             {% if job.link %}
                                 <a href="{{ job.link }}" target="_blank">查看</a>
                             {% else %}
                                 <span class="text-muted">无链接</span>
                             {% endif %}
-                        </td>
+                        </td> -->
                         <td>
                             <!-- 编辑按钮：传入职位ID -->
                             <a href="#"
-                                class="btn btn-sm btn-warning edit-job-btn"
+                                class="btn btn-sm btn-primary edit-job-btn"
                                 data-id="{{ job.id }}"
                             >编辑</a>
 

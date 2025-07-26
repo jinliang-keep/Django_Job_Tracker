@@ -87,17 +87,22 @@ def register(request):
 @login_required
 def job_list(request):
 
-    # 获取关键词
+    # 该用户的所有职位
+    base_filter = Q(user=request.user)
+
+    # 状态筛选部分
+    status = request.GET.get('status')
+    STATUS_MAP = {label: value for value, label in Job.status_choices}
+    if status:
+        status_value = STATUS_MAP.get(status)
+        base_filter &= Q(status=status_value)
+
+    # 关键词搜索部分
     query = request.GET.get('q')
     no_result = False
-
-    # 如果用户使用搜索功能
     if query:
         keywords = query.strip().split() # 拆分关键词
-        
-        base_filter = Q(user=request.user) # 只查当前登录用户的职位
         keyword_filter = Q()
-
         # 遍历关键字
         for word in keywords:
             keyword_filter |= (
@@ -106,26 +111,14 @@ def job_list(request):
                 Q(salary__icontains=word) | 
                 Q(location__icontains=word)
             )
+            base_filter &= keyword_filter
         
-        final_filter = base_filter & keyword_filter
-        jobs = Job.objects.filter(final_filter).order_by('-date_applied')
+    # 最终查询
+    jobs = Job.objects.filter(base_filter).order_by('-date_applied')
 
-        # jobs = Job.objects.filter(
-        #     Q(user=request.user) & (
-        #         Q(company__icontains=query) | 
-        #         Q(title__icontains=query) | 
-        #         Q(salary__icontains=query) | 
-        #         Q(location__icontains=query)
-        #     )        
-        # ).order_by('-date_applied')
-
-        # 如果搜索无结果
-        if not jobs.exists():
-            no_result = True  
-
-    # 展示职位列表
-    else:
-        jobs = Job.objects.filter(user=request.user).order_by('-date_applied')
+    # 如果搜索无结果
+    if not jobs.exists():
+        no_result = True
 
     # 用户提交表单，添加、编辑职位
     if request.method == 'POST':

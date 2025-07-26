@@ -65,6 +65,8 @@ table td {
     text-align: left;
     text-align: center;
     vertical-align: middle;
+    /* min-width: 50px; */
+    /* white-space: nowrap; */
 }
 
 table th {
@@ -88,4 +90,16 @@ table th {
 
 .card-border {
     border: 1px solid rgba(13, 110, 253, 0.5);
+}
+
+@media (max-width: 768px) {
+    table th, table td {
+        white-space: normal;
+        font-size: 14px;
+        padding: 6px;
+    }
+
+    .page-title {
+        font-size: 20px;
+    }
 }

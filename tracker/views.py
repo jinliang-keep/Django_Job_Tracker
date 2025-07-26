@@ -89,6 +89,10 @@ def job_list(request):
 
     # 该用户的所有职位
     base_filter = Q(user=request.user)
+    total_jobs_count = Job.objects.filter(base_filter).count()
+    has_jobs = total_jobs_count > 0
+
+    no_result = False
 
     # 状态筛选部分
     status = request.GET.get('status')
@@ -99,7 +103,6 @@ def job_list(request):
 
     # 关键词搜索部分
     query = request.GET.get('q')
-    no_result = False
     if query:
         keywords = query.strip().split() # 拆分关键词
         keyword_filter = Q()
@@ -112,13 +115,13 @@ def job_list(request):
                 Q(location__icontains=word)
             )
             base_filter &= keyword_filter
-        
+
     # 最终查询
     jobs = Job.objects.filter(base_filter).order_by('-date_applied')
-
     # 如果搜索无结果
-    if not jobs.exists():
+    if not jobs.exists() and has_jobs:
         no_result = True
+
 
     # 用户提交表单，添加、编辑职位
     if request.method == 'POST':

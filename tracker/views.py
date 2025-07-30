@@ -24,7 +24,7 @@ def home(request):
 def login_view(request):
     
     if request.method == 'POST':
-        # 1、将用户提交的数据传给表单
+        # 将用户提交的数据传给表单
         form = LoginForm(request.POST)
         # 验证表单是否合法
         if form.is_valid():
